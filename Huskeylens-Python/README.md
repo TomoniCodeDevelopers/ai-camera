@@ -1,6 +1,6 @@
 LEGO SPIKE HUBとHuskylensを接続して制御するためのドライバ、サンプルコード
   
-[Huskylens用ドライバ(MicroPython版)](src/Huskylens.py)
+[Huskylens用ドライバ(MicroPython版)](src/huskylens_lib.py)
 
 
 
