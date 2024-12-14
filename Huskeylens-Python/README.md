@@ -10,4 +10,5 @@ LEGO SPIKE HUBとHuskylensを接続して制御するためのドライバ、サ
 HUSKYLENS Protocol
 https://github.com/HuskyLens/HUSKYLENSArduino/blob/master/HUSKYLENS%20Protocol.md
 
-
+The Powered Up connector 仕様書
+https://www.philohome.com/wedo2reverse/connect.htm
