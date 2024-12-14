@@ -18,3 +18,5 @@ https://www.philohome.com/wedo2reverse/connect.htm
 
 Huskylens forum<br>
 https://www.dfrobot.com/forum/?t=23
+Study pack for HuskyLens<br>
+https://community.dfrobot.com/projects-HUSKYLENS.html
