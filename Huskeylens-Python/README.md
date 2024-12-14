@@ -15,3 +15,6 @@ https://github.com/HuskyLens/HUSKYLENSArduino/blob/master/HUSKYLENS%20Protocol.m
 
 The Powered Up connector 仕様書<br>
 https://www.philohome.com/wedo2reverse/connect.htm
+
+Huskylens forum<br>
+https://www.dfrobot.com/forum/?t=23
