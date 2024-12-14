@@ -1,7 +1,7 @@
 #
-#  Huskylens Python Driver 1.3 (2024/12/14)
+#  Huskylens Python Driver 1.4 (2024/12/14)
 #  file: huskylens_lib.py
-#  (test on PC)
+#  (only test on ESP32-C3, version='v1.23.0 on 2024-06-02')
 #
 #  change log
 #  version 1.2(2024/12/14)
@@ -10,9 +10,15 @@
 #     * Feature Addition  (func: read_ block())
 #       Differentiate between the LEGO-specific and general-purpose UART 
 #       read functions 
+#
 #  version 1.3(2024/12/14)
 #     * Refactoring: Consolidate functions into a class
 #     * rename the file  Huskylens.py -> huskylens_lib.py
+#
+#  version 1.4(2024/12/14)
+#     * Refactoring: Handle abnormal return values from Huskylens
+#                     via uart communication
+#
 #
 
 import utime
@@ -24,6 +30,7 @@ CMD_REQ_BLOCKS = bytes((0x55, 0xAA, 0x11, 0x00, 0x21, 0x31))
 CMD_REQ_ARROWS = bytes((0x55, 0xAA, 0x11, 0x00, 0x22, 0x32))
 
 COMMAND_POS = 4
+COMMAND_RETURN_HEADER = 0x55
 COMMAND_RETURN_INFO = 0x29
 COMMAND_RETURN_BLOCK = 0x2A
 COMMAND_RETURN_ARROW = 0x2B
@@ -32,7 +39,6 @@ COMMAND_RETURN_IS_PRO = 0x3B
 COMMAND_RETURN_BUSY = 0x3D
 COMMAND_RETURN_NEED_PRO = 0x3E
 
-COMMAND_RETURN_DATA_SIZE = 16
 
 class HuskyLens:
 
@@ -86,6 +92,7 @@ class HuskyLens:
     
     def read_block(self):
         buf = bytearray(100)
+        ret_val = []
         self.uart.write(CMD_REQ_BLOCKS)
         utime.sleep(0.1)
     
@@ -96,8 +103,13 @@ class HuskyLens:
         else:   # must be changed this check stmt
             # for MicroPython(LEGO)
             read_size = self.uart.read(buf)
-    
-        ret_val = []
+
+        # check received data
+        if read_size == 0:
+            return ret_val    # return []
+        if buf[0] != COMMAND_RETURN_HEADER:
+            return ret_val    # return []    # illegal data
+
         parse_pos = 0
         while parse_pos < read_size:
             (val, data_size) = self.parse_return_data(buf[parse_pos:])
@@ -110,7 +122,9 @@ class HuskyLens:
         return ret_val
     
     def parse_return_data(self, data):
-        data_size = 0
+        data_size = None
+        if len(data) < (COMMAND_POS + 1):
+            return (('unknown',), data_size)
         command = data[COMMAND_POS]
         if command == COMMAND_RETURN_INFO:
             data_size = 16
@@ -161,7 +175,10 @@ class HuskyLens:
 #
 #
 
+# test only..
 # >>> platform.platform()
 # 'MicroPython-1.23.0-riscv-IDFv5.0.4-with-newlib4.1.0'
 # >>> uos.uname()
 # (sysname='esp32', nodename='esp32', release='1.23.0', version='v1.23.0 on 2024-06-02', machine='ESP32C3 module with ESP32C3')
+#
+#
