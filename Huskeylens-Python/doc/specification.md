@@ -16,5 +16,6 @@ aeroplane, bicycle, bird, boat, bottle, bus, car, cat, chair, cow, dining-able, 
 
 
 
-tutorial<br>
-https://www.dfrobot.com/blog-13457.html
+### tutorial<br>
+- https://www.dfrobot.com/blog-13457.html
+- https://community.dfrobot.com/projects-HUSKYLENS.html
