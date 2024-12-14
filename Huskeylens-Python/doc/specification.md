@@ -13,9 +13,7 @@ aeroplane, bicycle, bird, boat, bottle, bus, car, cat, chair, cow, dining-able, 
 
 
 
-
-
-
-### tutorial<br>
+### 関連情報
+- https://wiki.dfrobot.com/HUSKYLENS_V1.0_SKU_SEN0305_SEN0336
 - https://www.dfrobot.com/blog-13457.html
 - https://community.dfrobot.com/projects-HUSKYLENS.html
