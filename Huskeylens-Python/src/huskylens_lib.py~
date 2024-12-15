@@ -21,14 +21,15 @@
 #
 #  version 1.5(2024/12/15)
 #     * Refactoring: Changed the recognition algorithm specification 
-#                    from string type to int type (enum like use)
+#                    from string type to Enum type ().
 #
 #
 
 import utime
 import uos
 
-class Algo:
+from enum import Enum
+class Algo(Enum):
     FACE_RECOGNITION = 1
     OBJECT_TRACKING = 2
     OBJECT_RECOGNITION = 3
