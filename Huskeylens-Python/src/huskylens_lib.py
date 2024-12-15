@@ -1,5 +1,5 @@
 #
-#  Huskylens Python Driver 1.4 (2024/12/14)
+#  Huskylens Python Driver 1.5 (2024/12/15)
 #  file: huskylens_lib.py
 #  (only test on ESP32-C3, version='v1.23.0 on 2024-06-02')
 #
@@ -19,10 +19,25 @@
 #     * Refactoring: Handle abnormal return values from Huskylens
 #                     via uart communication
 #
+#  version 1.5(2024/12/15)
+#     * Refactoring: Changed the recognition algorithm specification 
+#                    from string type to Enum type ().
+#
 #
 
 import utime
 import uos
+
+from enum import Enum
+class Algo(Enum):
+    FACE_RECOGNITION = 1
+    OBJECT_TRACKING = 2
+    OBJECT_RECOGNITION = 3
+    LINE_TRACKING = 4
+    COLOR_RECOGNITION = 5
+    TAG_RECOGNITION = 6
+    OBJECT_CLASSIFICATION = 7
+
 
 CMD_REQ_KNOCK = bytes((0x55,0xAA,0x11,0x00,0x2C,0x3C))
 CMD_REQ_BLKS_ARWS = bytes((0x55, 0xAA, 0x11, 0x00, 0x20, 0x30))
@@ -51,19 +66,19 @@ class HuskyLens:
     #
     def send_CMD_REQ_ALGO(self, type):
         cmd_pre_part = (0x55, 0xAA, 0x11, 0x02, 0x2D)
-        if type == 'FACE_RECOG':
+        if type == Algo.FACE_RECOGNITION:
             algo_defs = (0x00,0x0)
-        elif type == 'OBJ_TRACK':
+        elif type == Algo.OBJECT_TRACKING:
             algo_defs = (0x01,0x00)
-        elif type == 'OBJ_RECOG':
+        elif type == Algo.OBJECT_RECOGNITION:
             algo_defs = (0x02,0x00)
-        elif type == 'LINE_TRACK':
+        elif type == Algo.LINE_TRACKING:
             algo_defs = (0x03,0x00)
-        elif type == 'COLOR_RECOG':
+        elif type == Algo.COLOR_RECOGNITION:
             algo_defs = (0x04,0x00)
-        elif type == 'TAG_RECOG':
+        elif type == Algo.TAG_RECOGNITION:
             algo_defs = (0x05,0x00)
-        elif type == 'OBJ_CLSSIFY':
+        elif type == Algo.OBJECT_CLASSIFICATION:
             algo_defs = (0x06,0x00)
         else:
             print('Error unknown ALGO:',type)
