@@ -22,6 +22,7 @@
 #  version 1.5(2024/12/15)
 #     * Refactoring: Changed the recognition algorithm specification 
 #                    from string type to int type (enum like use)
+#                    change method name (read_tag -> read_tags, read_block -> read_blocks)
 #
 #
 
@@ -101,14 +102,14 @@ class HuskyLens:
     #
     # methods for receive data
     #
-    def read_tag(self):
-        return self.read_block()
+    def read_tags(self):
+        return self.read_blocks()
     
-    def read_block(self):
+    def read_blocks(self):
         buf = bytearray(100)
         ret_val = []
-        self.uart.write(CMD_REQ_BLOCKS)
-        utime.sleep(0.1)
+        self.send_CMD_REQ_BLOCKS()
+        utime.sleep(0.1)        # wait for 100msec
     
         # check current uPy(general MPU) or LEGO Special uPy
         if 'ESP' in self.machine:
