@@ -111,13 +111,13 @@ class HuskyLens:
         self.send_CMD_REQ_BLOCKS()
         utime.sleep(0.1)        # wait for 100msec
     
-        # check current uPy(general MPU) or LEGO Special uPy
-        if 'ESP' in self.machine:
-            # for MicroPython(general MPU eg; ESP)
-            read_size = self.uart.readinto(buf)
-        else:   # must be changed this check stmt
-            # for MicroPython(LEGO)
+        # check general MicroPython(general MPU) or LEGO Special MicroPython
+        if 'LEGO' in self.machine:
+            # for LEGO MicroPython (special specification?)
             read_size = self.uart.read(buf)
+        else:   
+            # for general MPU/Boards eg; ESP, RP2040
+            read_size = self.uart.readinto(buf)
 
         # check received data
         if read_size == 0:
