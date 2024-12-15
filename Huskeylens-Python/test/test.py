@@ -12,7 +12,7 @@ husky = HuskyLens(uart1)
 husky.send_CMD_REQ_ALGO(Algo.COLOR_RECOGNITION)
 
 while True:
-   print(husky.read_block())
+   print(husky.read_blocks())
 
 
 # Valid Recognition Algorithm
