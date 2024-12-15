@@ -191,15 +191,24 @@ class HuskyLens:
 #
 
 # test only..
+# ESP32-C3
 # >>> platform.platform()
 # 'MicroPython-1.23.0-riscv-IDFv5.0.4-with-newlib4.1.0'
 # >>> uos.uname()
 # (sysname='esp32', nodename='esp32', release='1.23.0', 
-#   version='v1.23.0 on 2024-06-02', machine='ESP32C3 module with ESP32C3')
+# version='v1.23.0 on 2024-06-02', 
+# machine='ESP32C3 module with ESP32C3')
 #
 #RP2040
 #>>> platform.platform()
 #'MicroPython-1.23.0-arm--with-newlib4.3.0'
 #>>> os.uname()
 #(sysname='rp2', nodename='rp2', release='1.23.0', 
-#  version='v1.23.0 on 2024-06-02 (GNU 13.2.0 MinSizeRel)', machine='Raspberry Pi Pico W with RP2040')
+# version='v1.23.0 on 2024-06-02 (GNU 13.2.0 MinSizeRel)', 
+# machine='Raspberry Pi Pico W with RP2040')
+#
+# LEGO SPIKE HUP
+#>>> os.uname()
+#(sysname='LEGO Technic Large Hub', nodename='LEGO Learning System Hub', 
+# release='1.14.0', version='v1.14-876-gfbecba865 on 2021-05-04', 
+# machine='LEGO Technic Large Hub with STM32F413xx')
