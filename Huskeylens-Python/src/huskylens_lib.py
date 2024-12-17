@@ -1,5 +1,5 @@
 #
-#  Huskylens Python Driver 1.4 (2024/12/14)
+#  Huskylens Python Driver 1.5 (2024/12/15)
 #  file: huskylens_lib.py
 #  (only test on ESP32-C3, version='v1.23.0 on 2024-06-02')
 #
@@ -19,10 +19,25 @@
 #     * Refactoring: Handle abnormal return values from Huskylens
 #                     via uart communication
 #
+#  version 1.5(2024/12/15)
+#     * Refactoring: Changed the recognition algorithm specification 
+#                    from string type to int type (enum like use)
+#                    change method name (read_tag -> read_tags, read_block -> read_blocks)
+#
 #
 
 import utime
 import uos
+
+class Algo:
+    FACE_RECOGNITION = 1
+    OBJECT_TRACKING = 2
+    OBJECT_RECOGNITION = 3
+    LINE_TRACKING = 4
+    COLOR_RECOGNITION = 5
+    TAG_RECOGNITION = 6
+    OBJECT_CLASSIFICATION = 7
+
 
 CMD_REQ_KNOCK = bytes((0x55,0xAA,0x11,0x00,0x2C,0x3C))
 CMD_REQ_BLKS_ARWS = bytes((0x55, 0xAA, 0x11, 0x00, 0x20, 0x30))
@@ -51,19 +66,19 @@ class HuskyLens:
     #
     def send_CMD_REQ_ALGO(self, type):
         cmd_pre_part = (0x55, 0xAA, 0x11, 0x02, 0x2D)
-        if type == 'FACE_RECOG':
+        if type == Algo.FACE_RECOGNITION:
             algo_defs = (0x00,0x0)
-        elif type == 'OBJ_TRACK':
+        elif type == Algo.OBJECT_TRACKING:
             algo_defs = (0x01,0x00)
-        elif type == 'OBJ_RECOG':
+        elif type == Algo.OBJECT_RECOGNITION:
             algo_defs = (0x02,0x00)
-        elif type == 'LINE_TRACK':
+        elif type == Algo.LINE_TRACKING:
             algo_defs = (0x03,0x00)
-        elif type == 'COLOR_RECOG':
+        elif type == Algo.COLOR_RECOGNITION:
             algo_defs = (0x04,0x00)
-        elif type == 'TAG_RECOG':
+        elif type == Algo.TAG_RECOGNITION:
             algo_defs = (0x05,0x00)
-        elif type == 'OBJ_CLSSIFY':
+        elif type == Algo.OBJECT_CLASSIFICATION:
             algo_defs = (0x06,0x00)
         else:
             print('Error unknown ALGO:',type)
@@ -87,22 +102,22 @@ class HuskyLens:
     #
     # methods for receive data
     #
-    def read_tag(self):
-        return self.read_block()
+    def read_tags(self):
+        return self.read_blocks()
     
-    def read_block(self):
+    def read_blocks(self):
         buf = bytearray(100)
         ret_val = []
-        self.uart.write(CMD_REQ_BLOCKS)
-        utime.sleep(0.1)
+        self.send_CMD_REQ_BLOCKS()
+        utime.sleep(0.1)        # wait for 100msec
     
-        # check current uPy(general MPU) or LEGO Special uPy
-        if 'ESP' in self.machine:
-            # for MicroPython(general MPU eg; ESP)
-            read_size = self.uart.readinto(buf)
-        else:   # must be changed this check stmt
-            # for MicroPython(LEGO)
+        # check general MicroPython(general MPU) or LEGO Special MicroPython
+        if 'LEGO' in self.machine:
+            # for LEGO MicroPython (special specification?)
             read_size = self.uart.read(buf)
+        else:   
+            # for general MPU/Boards eg; ESP, RP2040
+            read_size = self.uart.readinto(buf)
 
         # check received data
         if read_size == 0:
@@ -176,9 +191,24 @@ class HuskyLens:
 #
 
 # test only..
+# ESP32-C3
 # >>> platform.platform()
 # 'MicroPython-1.23.0-riscv-IDFv5.0.4-with-newlib4.1.0'
 # >>> uos.uname()
-# (sysname='esp32', nodename='esp32', release='1.23.0', version='v1.23.0 on 2024-06-02', machine='ESP32C3 module with ESP32C3')
+# (sysname='esp32', nodename='esp32', release='1.23.0', 
+# version='v1.23.0 on 2024-06-02', 
+# machine='ESP32C3 module with ESP32C3')
 #
+#RP2040
+#>>> platform.platform()
+#'MicroPython-1.23.0-arm--with-newlib4.3.0'
+#>>> os.uname()
+#(sysname='rp2', nodename='rp2', release='1.23.0', 
+# version='v1.23.0 on 2024-06-02 (GNU 13.2.0 MinSizeRel)', 
+# machine='Raspberry Pi Pico W with RP2040')
 #
+# LEGO SPIKE HUP
+#>>> os.uname()
+#(sysname='LEGO Technic Large Hub', nodename='LEGO Learning System Hub', 
+# release='1.14.0', version='v1.14-876-gfbecba865 on 2021-05-04', 
+# machine='LEGO Technic Large Hub with STM32F413xx')
